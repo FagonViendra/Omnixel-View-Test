@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Python - Bài 1: Hello World</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --text-color: #e2e8f0;
+            --accent-color: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        p.subtitle {
+            margin: 5px 0 0 0;
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            gap: 24px;
+            padding: 0 24px 24px 24px;
+            min-height: 0;
+        }
+
+        .panel {
+            flex: 1;
+            background: var(--panel-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 16px 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        /* Khối Box Tools */
+        .toolbox {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+        }
+
+        .block-btn {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .block-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Khu vực Editor */
+        .editor-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #38bdf8;
+            border-left: 4px solid #38bdf8;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .code-block input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #a78bfa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            outline: none;
+            width: 250px;
+            transition: border-color 0.2s;
+        }
+
+        .code-block input:focus {
+            border-color: #38bdf8;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .run-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .run-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .run-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Terminal (Bảng Trực Quan) */
+        .terminal {
+            flex: 1;
+            padding: 24px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            color: #4ade80;
+            background: #0f172a;
+        }
+
+        .terminal-line {
+            animation: fadeIn 0.3s forwards;
+            opacity: 0;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .terminal-line .prompt {
+            color: #fbbf24;
+            user-select: none;
+        }
+
+        .sys-msg {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Bài 1: Lời Chào Nước Mỹ (Hello World)</h1>
+        <p class="subtitle">Khám phá Python ngay trên trình duyệt bằng cách lắp ráp khối lệnh!</p>
+    </header>
+
+    <div class="container">
+        <!-- Bảng 1: Lắp rắp khối -->
+        <div class="panel">
+            <div class="panel-header">
+                💻 Khu Vực Lắp Ghép Code
+                <button class="run-btn" onclick="runCode()">
+                    ▶ Chạy Code
+                </button>
+            </div>
+            <div class="toolbox">
+                <button class="block-btn" onclick="addPrintBlock()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Thêm khối print()
+                </button>
+            </div>
+            <div class="editor-area" id="editor">
+                <!-- Các khối code sẽ nằm ở đây -->
+            </div>
+        </div>
+
+        <!-- Bảng 2: Kết quả trực quan -->
+        <div class="panel">
+            <div class="panel-header">
+                🚀 Bảng Trực Quan (Kết Quả)
+            </div>
+            <div class="terminal" id="output">
+                <div class="terminal-line sys-msg"># Hệ thống đã sẵn sàng...</div>
+                <div class="terminal-line sys-msg"># Hãy thử thêm một khối print và chạy thử nhé.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hàm thêm một khối lệnh print() vào khu vực Editor
+        function addPrintBlock() {
+            const editor = document.getElementById('editor');
+            const blockId = Date.now(); // Tạo ID ngẫu nhiên cho nút xóa
+
+            const block = document.createElement('div');
+            block.className = 'code-block';
+            block.id = `block-${blockId}`;
+
+            block.innerHTML = `
+                <span style="color: #60a5fa; font-weight: 600;">print</span>
+                <span style="color: #f8fafc;">(</span>
+                <span style="color: #fcd34d;">"</span>
+                <input type="text" placeholder="Nhập chữ/số vào đây" class="print-input">
+                <span style="color: #fcd34d;">"</span>
+                <span style="color: #f8fafc;">)</span>
+                <button class="delete-btn" title="Xóa khối lệnh này" onclick="document.getElementById('block-${blockId}').remove()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            `;
+
+            editor.appendChild(block);
+
+            // Tự động focus vào ô input vừa được tạo
+            setTimeout(() => {
+                block.querySelector('input').focus();
+            }, 100);
+        }
+
+        // Hàm chạy code và in ra bảng trực quan
+        function runCode() {
+            const inputs = document.querySelectorAll('.print-input');
+            const output = document.getElementById('output');
+
+            // Hiệu ứng "reset" màn hình console
+            output.innerHTML = '';
+
+            if (inputs.length === 0) {
+                const msg = document.createElement('div');
+                msg.className = 'terminal-line sys-msg';
+                msg.textContent = '# Không có đoạn code nào để chạy.';
+                output.appendChild(msg);
+                return;
+            }
+
+            // In từng dòng dựa trên các ô input
+            inputs.forEach((input, index) => {
+                const text = input.value;
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                // Delay một chút để tạo cảm giác chương trình đang chạy thực
+                line.style.animationDelay = `${index * 0.15}s`;
+
+                line.innerHTML = `
+                    <span class="prompt">>></span>
+                    <span>${text}</span>
+                `;
+                output.appendChild(line);
+            });
+        }
+
+        // Tạo sẵn 1 khối lúc bắt đầu cho trực quan
+        window.onload = () => {
+            addPrintBlock();
+            const firstInput = document.querySelector('.print-input');
+            if (firstInput) firstInput.value = "Hello World!";
+        };
+    </script>
+</body>
+
+</html>
