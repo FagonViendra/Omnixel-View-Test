@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="vi">
+<!-- 
+  Ứng dụng Học Python Trực Quan
+  Mục đích: Giúp người mới bắt đầu làm quen với cú pháp Python thông qua phương pháp kéo thả (Drag & Drop)
+  Tác giả: Loxi (AI Assistant)
+-->
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Python - Bài 1: Hello World</title>
+    <title>Học Python - Bài 1 & 2: Hello World & Biến Sở</title>
+    <!-- Tải phông chữ hiện đại để giao diện xịn sò hơn -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;600&display=swap"
         rel="stylesheet">
+    <!-- Sử dụng SortableJS để Hỗ trợ Kéo thả (Drag & Drop) một cách mượt mà nhất -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
+        /* Khai báo các biến CSS (Màu sắc, kích thước) để dễ quản lý giao diện Dack Mode */
         :root {
             --bg-color: #0f172a;
             --panel-bg: rgba(30, 41, 59, 0.7);
@@ -21,7 +30,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
             color: var(--text-color);
             height: 100vh;
             display: flex;
@@ -30,31 +39,34 @@
         }
 
         header {
-            padding: 20px;
+            padding: 15px 20px;
             text-align: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
         }
 
         h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
-            background: linear-gradient(to right, #38bdf8, #a78bfa);
+            background: linear-gradient(to right, #38bdf8, #c084fc, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+            text-shadow: 0 4px 20px rgba(192, 132, 252, 0.3);
+            letter-spacing: -0.5px;
         }
 
         p.subtitle {
             margin: 5px 0 0 0;
             color: #94a3b8;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .container {
             display: flex;
             flex: 1;
             gap: 24px;
-            padding: 0 24px 24px 24px;
+            padding: 24px;
             min-height: 0;
         }
 
@@ -63,16 +75,17 @@
             background: var(--panel-bg);
             border-radius: 20px;
             border: 1px solid var(--border-color);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            position: relative;
         }
 
         .panel-header {
             padding: 16px 24px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-bottom: 1px solid var(--border-color);
             font-weight: 600;
             display: flex;
@@ -82,93 +95,172 @@
             color: #fff;
         }
 
-        /* Khối Box Tools */
+        /* Thanh công cụ chứa các nút thêm khối lệnh */
         .toolbox {
             padding: 16px 24px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .block-btn {
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
+        .btn {
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
-        .block-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        .btn-var {
+            background: linear-gradient(135deg, #d946ef, #9333ea);
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
         }
 
-        /* Khu vực Editor */
+        .btn-math {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Nút phân tích & chạy code */
+        .run-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 10px 24px;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+        }
+
+        .run-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Khu vực thả khối lệnh (Editor) */
         .editor-area {
             flex: 1;
             padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.1);
         }
 
+        /* Style chung cho một khối lệnh */
         .code-block {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid #38bdf8;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-left: 4px solid #38bdf8;
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             font-family: 'Fira Code', monospace;
             font-size: 1.1rem;
+            cursor: grab;
+            /* Con trỏ hình bàn tay để báo hiệu kéo thả */
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px) scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        .code-block:active {
+            cursor: grabbing;
+            transform: scale(0.98);
         }
 
+        .code-block.sortable-ghost {
+            opacity: 0.4;
+        }
+
+        /* Màu viền trái riêng cho từng loại block */
+        .block-print {
+            border-left-color: #38bdf8;
+        }
+
+        .block-var {
+            border-left-color: #c084fc;
+        }
+
+        .block-math {
+            border-left-color: #fbbf24;
+        }
+
+        /* Biểu tượng kéo thả */
+        .drag-handle {
+            color: #64748b;
+            cursor: grab;
+            margin-right: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        /* Ô nhập liệu trong khối lệnh */
         .code-block input {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #a78bfa;
-            padding: 6px 12px;
+            color: #e2e8f0;
+            padding: 6px 10px;
             border-radius: 6px;
             font-family: 'Fira Code', monospace;
-            font-size: 1.1rem;
+            font-size: 1rem;
             outline: none;
-            width: 250px;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
+        }
+
+        .code-block input.str-input {
+            color: #86efac;
+            width: 180px;
+        }
+
+        .code-block input.var-input {
+            color: #f43f5e;
+            width: 100px;
+            font-weight: bold;
+        }
+
+        .code-block input.num-input {
+            color: #facc15;
+            width: 60px;
+            text-align: center;
         }
 
         .code-block input:focus {
             border-color: #38bdf8;
             background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
         }
 
         .delete-btn {
             background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.2);
             color: #ef4444;
             cursor: pointer;
             width: 32px;
@@ -186,54 +278,40 @@
             color: white;
         }
 
-        .run-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .run-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-        }
-
-        .run-btn:active {
-            transform: scale(0.95);
-        }
-
         /* Terminal (Bảng Trực Quan) */
         .terminal {
             flex: 1;
             padding: 24px;
             font-family: 'Fira Code', monospace;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             line-height: 1.6;
             overflow-y: auto;
-            color: #4ade80;
+            color: #e2e8f0;
             background: #0f172a;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: "PYTHON 3.10.4";
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .terminal-line {
-            animation: fadeIn 0.3s forwards;
-            opacity: 0;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             gap: 12px;
+            word-break: break-all;
         }
 
         .terminal-line .prompt {
-            color: #fbbf24;
+            color: #10b981;
             user-select: none;
+            font-weight: bold;
         }
 
         .sys-msg {
@@ -241,13 +319,92 @@
             font-style: italic;
         }
 
-        @keyframes fadeIn {
-            to {
+        .error-msg {
+            color: #ef4444;
+        }
+
+        .output-msg {
+            color: #38bdf8;
+        }
+
+        /* Typewriter effect cursor */
+        .typewriter-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.15rem;
+            background-color: #10b981;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
                 opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
             }
         }
 
-        /* Scrollbar */
+        /* CSS code hint/tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Giao diện code tĩnh được sinh ra (Phía dưới terminal) */
+        .generated-code {
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+            background: rgba(0, 0, 0, 0.6);
+            min-height: 120px;
+        }
+
+        .generated-code h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generated-code pre {
+            margin: 0;
+            color: #a78bfa;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -269,112 +426,331 @@
 
 <body>
     <header>
-        <h1>Bài 1: Lời Chào Nước Mỹ (Hello World)</h1>
-        <p class="subtitle">Khám phá Python ngay trên trình duyệt bằng cách lắp ráp khối lệnh!</p>
+        <h1>Trạm Dịch Mã Python 🚀</h1>
+        <p class="subtitle">Kéo thả, Lắp ráp và Xem Code chạy Thực tế ngay lập tức!</p>
     </header>
 
     <div class="container">
         <!-- Bảng 1: Lắp rắp khối -->
         <div class="panel">
             <div class="panel-header">
-                💻 Khu Vực Lắp Ghép Code
-                <button class="run-btn" onclick="runCode()">
-                    ▶ Chạy Code
-                </button>
-            </div>
-            <div class="toolbox">
-                <button class="block-btn" onclick="addPrintBlock()">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                💻 Biệt Giới Lắp Ráp Khối Lệnh
+                <button class="btn run-btn" onclick="runCode()">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
                     </svg>
-                    Thêm khối print()
+                    COMPILE & RUN
                 </button>
             </div>
+
+            <!-- Kho chứa các loại khối -->
+            <div class="toolbox">
+                <div class="tooltip">
+                    <button class="btn btn-print" onclick="addBlock('print')">
+                        + Khối Print (In)
+                    </button>
+                    <span class="tooltiptext">Dùng để in chữ hoặc kết quả ra màn hình (Terminal)</span>
+                </div>
+
+                <div class="tooltip">
+                    <button class="btn btn-var" onclick="addBlock('variable')">
+                        + Khối Biến số (Var)
+                    </button>
+                    <span class="tooltiptext">Tạo một cái hộp (biến) để cất giữ dữ liệu. Ví dụ: x = 10</span>
+                </div>
+
+                <div class="tooltip">
+                    <button class="btn btn-math" onclick="addBlock('math')">
+                        + Khối Toán học
+                    </button>
+                    <span class="tooltiptext">Thực hiện phép tính Cộng, Trừ, Nhân, Chia cơ bản.</span>
+                </div>
+            </div>
+
             <div class="editor-area" id="editor">
-                <!-- Các khối code sẽ nằm ở đây -->
+                <!-- Khu vực SortableJS sẽ quản lý các khối ở đây -->
+            </div>
+
+            <!-- Hiển thị mã nguồn Python thực tế -->
+            <div class="generated-code">
+                <h3>Mã Nguồn Python Tương Ứng:</h3>
+                <pre id="real-code"># Mã của bạn sẽ xuất hiện ở đây...</pre>
             </div>
         </div>
 
         <!-- Bảng 2: Kết quả trực quan -->
         <div class="panel">
             <div class="panel-header">
-                🚀 Bảng Trực Quan (Kết Quả)
+                📺 Terminal Hiển Thị Kết Quả
+                <button class="btn" style="background: rgba(255,255,255,0.1); padding: 5px 10px; font-size: 0.8rem;"
+                    onclick="clearTerminal()">Xóa Log</button>
             </div>
             <div class="terminal" id="output">
-                <div class="terminal-line sys-msg"># Hệ thống đã sẵn sàng...</div>
-                <div class="terminal-line sys-msg"># Hãy thử thêm một khối print và chạy thử nhé.</div>
+                <div class="terminal-line sys-msg"># Khởi động môi trường Python mô phỏng...</div>
+                <div class="terminal-line sys-msg"># Trạng thái: Sẵn sàng nhận lệnh!</div>
+                <!-- Con trỏ nhấp nháy -->
+                <div id="cursor-line" class="terminal-line">
+                    <span class="prompt">>>> </span><span class="typewriter-cursor"></span>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Hàm thêm một khối lệnh print() vào khu vực Editor
-        function addPrintBlock() {
-            const editor = document.getElementById('editor');
-            const blockId = Date.now(); // Tạo ID ngẫu nhiên cho nút xóa
+        // Cấu hình tính năng Kéo Thả bằng SortableJS
+        const editor = document.getElementById('editor');
+        new Sortable(editor, {
+            animation: 250, // Animation khi kéo trượt
+            ghostClass: 'sortable-ghost', // Lớp CSS khi đang kéo
+            handle: '.drag-handle', // Chỉ cho phép kéo ở icon grip
+            onEnd: function (evt) {
+                updateRealCode(); // Cập nhật code thật sau khi kéo thả xong
+            }
+        });
 
+        const iconDrag = `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>`;
+        const iconDelete = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+
+        // Hàm thêm khối lệnh vào Editor
+        function addBlock(type) {
+            const blockId = 'block-' + Date.now();
             const block = document.createElement('div');
-            block.className = 'code-block';
-            block.id = `block-${blockId}`;
+            block.className = `code-block block-${type}`;
+            block.id = blockId;
+            // Đánh dấu loại block dữ liệu để lúc biên dịch parse cho dễ
+            block.dataset.type = type;
 
-            block.innerHTML = `
-                <span style="color: #60a5fa; font-weight: 600;">print</span>
-                <span style="color: #f8fafc;">(</span>
-                <span style="color: #fcd34d;">"</span>
-                <input type="text" placeholder="Nhập chữ/số vào đây" class="print-input">
-                <span style="color: #fcd34d;">"</span>
-                <span style="color: #f8fafc;">)</span>
-                <button class="delete-btn" title="Xóa khối lệnh này" onclick="document.getElementById('block-${blockId}').remove()">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            let innerHTML = `<div class="drag-handle" title="Kéo để di chuyển">${iconDrag}</div>`;
+
+            if (type === 'print') {
+                innerHTML += `
+                    <span style="color: #60a5fa; font-weight: 600;">print</span>
+                    <span style="color: #f8fafc;">(</span>
+                    <input type="text" placeholder="Gõ gì đó..." class="str-input content-val" oninput="updateRealCode()">
+                    <span style="color: #f8fafc;">)</span>
+                `;
+            } else if (type === 'variable') {
+                innerHTML += `
+                    <input type="text" placeholder="tên_biến" class="var-input content-name" value="x" oninput="updateRealCode()">
+                    <span style="color: #f8fafc; margin: 0 5px;">=</span>
+                    <input type="text" placeholder="Giá trị" class="str-input content-val" oninput="updateRealCode()">
+                `;
+            } else if (type === 'math') {
+                innerHTML += `
+                    <span style="color: #60a5fa; font-weight: 600;">print</span>
+                    <span style="color: #f8fafc;">(</span>
+                    <input type="number" placeholder="số" class="num-input content-a" value="5" oninput="updateRealCode()">
+                    <select class="content-op" style="background:#1e293b; color:white; border:none; padding:5px; border-radius:4px; outline:none;" onchange="updateRealCode()">
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                        <option value="*">×</option>
+                        <option value="/">÷</option>
+                    </select>
+                    <input type="number" placeholder="số" class="num-input content-b" value="2" oninput="updateRealCode()">
+                    <span style="color: #f8fafc;">)</span>
+                `;
+            }
+
+            innerHTML += `
+                <button class="delete-btn" title="Xóa lệnh" onclick="removeBlock('${blockId}')">
+                    ${iconDelete}
                 </button>
             `;
 
+            block.innerHTML = innerHTML;
             editor.appendChild(block);
-
-            // Tự động focus vào ô input vừa được tạo
-            setTimeout(() => {
-                block.querySelector('input').focus();
-            }, 100);
+            updateRealCode();
         }
 
-        // Hàm chạy code và in ra bảng trực quan
-        function runCode() {
-            const inputs = document.querySelectorAll('.print-input');
-            const output = document.getElementById('output');
+        // Xóa khối lệnh
+        function removeBlock(id) {
+            document.getElementById(id).remove();
+            updateRealCode();
+        }
 
-            // Hiệu ứng "reset" màn hình console
-            output.innerHTML = '';
+        // Cập nhật thẻ <pre> mã Python phía dưới cùng để người dùng thấy Python thật sự trông thế nào
+        function updateRealCode() {
+            const blocks = Array.from(editor.children);
+            let pythonCode = "";
 
-            if (inputs.length === 0) {
-                const msg = document.createElement('div');
-                msg.className = 'terminal-line sys-msg';
-                msg.textContent = '# Không có đoạn code nào để chạy.';
-                output.appendChild(msg);
+            if (blocks.length === 0) {
+                document.getElementById('real-code').textContent = "# Mã của bạn sẽ xuất hiện ở đây...";
                 return;
             }
 
-            // In từng dòng dựa trên các ô input
-            inputs.forEach((input, index) => {
-                const text = input.value;
-                const line = document.createElement('div');
-                line.className = 'terminal-line';
-                // Delay một chút để tạo cảm giác chương trình đang chạy thực
-                line.style.animationDelay = `${index * 0.15}s`;
-
-                line.innerHTML = `
-                    <span class="prompt">>></span>
-                    <span>${text}</span>
-                `;
-                output.appendChild(line);
+            blocks.forEach(block => {
+                const type = block.dataset.type;
+                if (type === 'print') {
+                    let val = block.querySelector('.content-val').value;
+                    // Nếu giá trị có chứa trích dẫn, hoặc để cho đơn giản ta giả định là chuỗi trừ phi nó đã là tên biến
+                    // Ở đây đơn giản hóa luôn wrap bằng dấy nháy kép nếu nó không phải số
+                    let isNum = !isNaN(val) && val.trim() !== "";
+                    pythonCode += isNum ?\`print(\${val})\n\` : \`print("\${val}")\n\`;
+                } else if (type === 'variable') {
+                    let name = block.querySelector('.content-name').value || "var";
+                    let val = block.querySelector('.content-val').value;
+                    let isNum = !isNaN(val) && val.trim() !== "";
+                    pythonCode += isNum ? \`\${name} = \${val}\n\` : \`\${name} = "\${val}"\n\`;
+                } else if (type === 'math') {
+                    let a = block.querySelector('.content-a').value;
+                    let op = block.querySelector('.content-op').value;
+                    let pyOp = op === '×' ? '*' : op === '÷' ? '/' : op;
+                    let b = block.querySelector('.content-b').value;
+                    pythonCode += \`print(\${a} \${pyOp} \${b})\n\`;
+                }
             });
+
+            document.getElementById('real-code').textContent = pythonCode;
         }
 
-        // Tạo sẵn 1 khối lúc bắt đầu cho trực quan
+        // Mảng lưu trữ trạng thái các dòng đang gõ (Hiệu ứng Typewriter Terminal)
+        let queueLines = [];
+        let isTyping = false;
+        
+        // Trình thông dịch cực kỳ đơn giản (Mô phỏng)
+        function runCode() {
+            const blocks = Array.from(editor.children);
+            if(blocks.length === 0) {
+                addLogTerminal("# Lỗi: Không có khối lệnh nào để thực thi.", true);
+                return;
+            }
+
+            // Môi trường lưu biến (Environment giả lập)
+            let env = {};
+
+            // Dùng vòng lặp phân tích từng dòng lệnh
+            for (let block of blocks) {
+                const type = block.dataset.type;
+                try {
+                    if (type === 'print') {
+                        let val = block.querySelector('.content-val').value;
+                        if(env.hasOwnProperty(val)) {
+                            queueLines.push(env[val]); // Nếu in biến
+                        } else {
+                            queueLines.push(val); // In chuỗi/số
+                        }
+                    } else if (type === 'variable') {
+                        let name = block.querySelector('.content-name').value;
+                        let val = block.querySelector('.content-val').value;
+                        
+                        if (!name.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
+                            throw new Error(\`SyntaxError: Tên biến '\${name}' không hợp lệ. Chỉ dùng a-z, _\`);
+                        }
+                        
+                        let isNum = !isNaN(val) && val.trim() !== "";
+                        env[name] = isNum ? Number(val) : val;
+                        // Biến không in ra kết quả, nhưng thêm log hệ thống
+                        queueLines.push(\`[Hệ thống] Đã cấu hình bộ nhớ: \${name} = \${env[name]}\`);
+                        
+                    } else if (type === 'math') {
+                        let a = Number(block.querySelector('.content-a').value);
+                        let buildOp = block.querySelector('.content-op').value;
+                        let b = Number(block.querySelector('.content-b').value);
+                        let res = 0;
+                        if(buildOp === '+') res = a + b;
+                        if(buildOp === '-') res = a - b;
+                        if(buildOp === '*' || buildOp === '×') res = a * b;
+                        if(buildOp === '/' || buildOp === '÷') {
+                            if(b === 0) throw new Error("ZeroDivisionError: Lỗi chia cho 0!");
+                            res = a / b;
+                        }
+                        queueLines.push(res);
+                    }
+                } catch (e) {
+                    queueLines.push(\`[ERROR] \${e.message}\`);
+                    // Dừng ngay lập tức nếu lỗi
+                    break;
+                }
+            }
+
+            // Bắt đầu hiệu ứng in ra từ từ
+            processQueue();
+        }
+
+        function removeCursor() {
+            const cur = document.getElementById('cursor-line');
+            if(cur) cur.remove();
+        }
+        function appendCursor() {
+            removeCursor();
+            const output = document.getElementById('output');
+            const div = document.createElement('div');
+            div.id = 'cursor-line';
+            div.className = 'terminal-line';
+            div.innerHTML = \`<span class="prompt">>>> </span><span class="typewriter-cursor"></span>\`;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function addLogTerminal(text, isError=false) {
+            removeCursor();
+            const output = document.getElementById('output');
+            const row = document.createElement('div');
+            row.className = \`terminal-line \${isError ? 'error-msg' : 'output-msg'}\`;
+            
+            // Nếu là log hệ thống (Hệ thống) thì in mờ
+            if(String(text).startsWith('[Hệ')) {
+                row.className = 'terminal-line sys-msg';
+            }
+            
+            row.innerHTML = \`<span style="margin-right: 10px;">\${isError?'❌':''}</span> <span>\${text}</span>\`;
+            output.appendChild(row);
+            appendCursor();
+        }
+
+        // Hiệu ứng "đánh chữ" từng dòng 1
+        function processQueue() {
+            if (isTyping || queueLines.length === 0) return;
+            isTyping = true;
+            
+            const textToType = queueLines.shift();
+            const isError = String(textToType).startsWith('[ERROR]');
+            
+            removeCursor();
+            const output = document.getElementById('output');
+            const row = document.createElement('div');
+            const isSysMsg = String(textToType).startsWith('[Hệ');
+            
+            row.className = \`terminal-line \${isError ? 'error-msg' : (isSysMsg?'sys-msg':'output-msg')}\`;
+            let prefix = isError ? '[Ngoại lệ Pỵthon] ' : (isSysMsg?'':'<span class="prompt">>></span> ');
+            
+            let textSpan = document.createElement('span');
+            row.innerHTML = prefix;
+            row.appendChild(textSpan);
+            output.appendChild(row);
+
+            let charIdx = 0;
+            let actualStr = String(textToType).replace('[ERROR] ', '');
+            
+            // Set Interval đánh từng phím nhanh (40ms/phím)
+            let typeInterval = setInterval(() => {
+                textSpan.textContent += actualStr.charAt(charIdx);
+                charIdx++;
+                output.scrollTop = output.scrollHeight; // Auto cuộn
+                
+                if(charIdx >= actualStr.length) {
+                    clearInterval(typeInterval);
+                    appendCursor();
+                    isTyping = false;
+                    // Chạy dòng tiếp theo trong hàng đợi (nếu có delay 200ms)
+                    setTimeout(processQueue, 150);
+                }
+            }, 30);
+        }
+
+        function clearTerminal() {
+            const output = document.getElementById('output');
+            output.innerHTML = '';
+            appendCursor();
+        }
+
+        // Demo ban đầu
         window.onload = () => {
-            addPrintBlock();
-            const firstInput = document.querySelector('.print-input');
-            if (firstInput) firstInput.value = "Hello World!";
+            addBlock('print');
+            addBlock('variable');
+            addBlock('math');
         };
     </script>
 </body>
