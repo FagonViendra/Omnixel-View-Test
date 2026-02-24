@@ -825,11 +825,12 @@
                 if (!line || line.startsWith('#')) return;
 
                 // Parse print
-                let printMatch = line.match(/^print\s*\(\s*(.*)\s*\)$/);
+                // Cập nhật regex để bắt cả trường hợp print("") rỗng
+                let printMatch = line.match(/^print\s*\(\s*(.*?)\s*\)$/);
                 if (printMatch) {
                     let content = printMatch[1].trim();
 
-                    // Kiểm tra xem đó là phép toán không
+                    // Kiểm tra xem đó là phép toán không (Hỗ trợ khoảng trắng)
                     let mathMatch = content.match(/^([\d.]+)\s*([\+\-\*\/])\s*([\d.]+)$/);
                     if (mathMatch) {
                         editor.appendChild(createBlockFromCode('print', {
@@ -841,7 +842,8 @@
                     } else {
                         // Loại bỏ dấu nháy kép / đơn nếu có
                         if ((content.startsWith('"') && content.endsWith('"')) || (content.startsWith("'") && content.endsWith("'"))) {
-                            content = content.substring(1, content.length - 1);
+                            // Chỉ lấy nội dung nếu độ dài >= 2 (tránh lỗi với chuỗi "")
+                            content = content.length >= 2 ? content.substring(1, content.length - 1) : "";
                         }
 
                         editor.appendChild(createBlockFromCode('print', {
