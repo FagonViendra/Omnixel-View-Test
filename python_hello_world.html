@@ -434,7 +434,7 @@
         <!-- Bảng 1: Lắp rắp khối -->
         <div class="panel">
             <div class="panel-header">
-                💻 Biệt Giới Lắp Ráp Khối Lệnh
+                💻 Khu Vực Trực Quan Hóa
                 <button class="btn run-btn" onclick="runCode()">
                     <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -526,30 +526,31 @@
 
             if (type === 'print') {
                 innerHTML += `
-                    <span style="color: #60a5fa; font-weight: 600;">print</span>
-                    <span style="color: #f8fafc;">(</span>
-                    <input type="text" placeholder="Gõ gì đó..." class="str-input content-val" oninput="updateRealCode()">
-                    <span style="color: #f8fafc;">)</span>
+                    <span style="color: #fff; background: #2563eb; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 10px; font-weight: bold; letter-spacing: 1px;">HÀNH ĐỘNG</span>
+                    <span style="color: #e2e8f0; font-weight: normal;">Hiện ra màn hình nội dung: </span>
+                    <input type="text" placeholder="Nhập vào đây..." class="str-input content-val" oninput="updateRealCode()" style="margin-left: 8px;">
                 `;
             } else if (type === 'variable') {
                 innerHTML += `
-                    <input type="text" placeholder="tên_biến" class="var-input content-name" value="x" oninput="updateRealCode()">
-                    <span style="color: #f8fafc; margin: 0 5px;">=</span>
-                    <input type="text" placeholder="Giá trị" class="str-input content-val" oninput="updateRealCode()">
+                    <span style="color: #fff; background: #9333ea; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 10px; font-weight: bold; letter-spacing: 1px;">BỘ NHỚ</span>
+                    <span style="color: #e2e8f0; font-weight: normal;">Lấy một cái hộp tên là </span>
+                    <input type="text" placeholder="tên_hộp" class="var-input content-name" value="x" oninput="updateRealCode()" style="margin: 0 8px;">
+                    <span style="color: #e2e8f0; font-weight: normal;">để cất giữ dữ liệu </span>
+                    <input type="text" placeholder="Giá trị" class="str-input content-val" oninput="updateRealCode()" style="margin-left: 8px;">
                 `;
             } else if (type === 'math') {
                 innerHTML += `
-                    <span style="color: #60a5fa; font-weight: 600;">print</span>
-                    <span style="color: #f8fafc;">(</span>
-                    <input type="number" placeholder="số" class="num-input content-a" value="5" oninput="updateRealCode()">
-                    <select class="content-op" style="background:#1e293b; color:white; border:none; padding:5px; border-radius:4px; outline:none;" onchange="updateRealCode()">
-                        <option value="+">+</option>
-                        <option value="-">-</option>
-                        <option value="*">×</option>
-                        <option value="/">÷</option>
+                    <span style="color: #fff; background: #d97706; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 10px; font-weight: bold; letter-spacing: 1px;">TÍNH TOÁN</span>
+                    <span style="color: #e2e8f0; font-weight: normal;">Tính </span>
+                    <input type="number" placeholder="số" class="num-input content-a" value="5" oninput="updateRealCode()" style="margin: 0 8px;">
+                    <select class="content-op" style="background:#1e293b; color:white; border:none; padding:8px 5px; border-radius:4px; outline:none; font-weight: bold; font-size: 1rem;" onchange="updateRealCode()">
+                        <option value="+">cộng (+)</option>
+                        <option value="-">trừ (-)</option>
+                        <option value="*">nhân (×)</option>
+                        <option value="/">chia (÷)</option>
                     </select>
-                    <input type="number" placeholder="số" class="num-input content-b" value="2" oninput="updateRealCode()">
-                    <span style="color: #f8fafc;">)</span>
+                    <input type="number" placeholder="số" class="num-input content-b" value="2" oninput="updateRealCode()" style="margin: 0 8px;">
+                    <span style="color: #e2e8f0; font-weight: normal;">và in kết quả</span>
                 `;
             }
 
